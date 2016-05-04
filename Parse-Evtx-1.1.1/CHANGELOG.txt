@@ -1,0 +1,178 @@
+2011-11-28  Version 1.1.1
+
+    * evtxdump.pl: make STDOUT hot/unbuffered
+
+    * Fixed a memory leak caused by a circular object reference. Thanks
+      to Heinz Mueller for reporting the bug.
+    
+    * evtxdump.pl, evtxinfo.pl, evtxtemplates.pl: require IO::File version
+      1.14 or later.
+
+
+2011-11-11	Version 1.1.0
+
+    * Event.pm: Bumped version to 1.1.0
+    
+    * Node0x01.pm, Node0x06: Fixed check for flags
+    * Node0x05.pm: Added support for flag 0x40
+    * Node0x07.pm: Added parser for XML CDATA section
+    * Node0x09.pm: Added parser for XML entity reference
+    * Node0x0a.pm, Node0x0b.pm: Added parser for XML processing instruction
+    * BXmlNode.pm: Now prints context in case of unknown opcode
+    
+    * Type0x09.pm, Type0x0a.pm: Fixed sign error
+    
+    * Type0x0b.pm, Type0x0c.pm: Output now in scientific format
+    
+    * Type0x83.pm: Added parser for array of signed byte
+    * Type0x84.pm: Added parser for array of unsigned byte
+    * Type0x85.pm: Added parser for array of signed int16
+    * Type0x86.pm: Added parser for array of unsigned int16
+    * Type0x87.pm: Added parser for array of signed int32
+    * Type0x88.pm: Added parser for array of unsigned int32
+    * Type0x89.pm: Added parser for array of signed int64
+    * Type0x8a.pm: Added parser for array of unsigned int64	
+    * Type0x8b.pm: Added parser for array of single prec. float
+    * Type0x8c.pm: Added parser for array of double prec. float
+    * Type0x8f.pm: Added parser for array of GUID
+    * Type0x91.pm: Added parser for array of FILETIME
+    * Type0x92.pm: Added parser for array of SYSTEMTIME
+    * VariantType.pm: Added the afore mentioned array data types
+
+
+2011-06-08  Version 1.0.8
+
+   * BXmlNode.pm: Emit short hex dump in case of an unknown opcode.
+   
+   * Evtx.pm: Now reads number of oldest chunk from header.
+   
+   * evtxinfo.pl: Now shows the oldest chunk info from file header.
+     First column of chunk list indicates oldest (>) and current (*) chunk.
+
+   * evtxdump.pl, evtxinfo.pl, evtxtemplates.pl: Manual page (POD) provided
+     by Richard W. M. Jones.
+     
+   * Build system provided by Richard W. M. Jones.
+
+
+2011-01-04  Version 1.0.7
+
+    * README.txt: Changed the description of a sample program. Thanks to
+      Andrew Hoog for finding and reporting the error.
+      
+    * Event.pm: TimeCreated from the outer structure was not properly parsed.
+      Added method get_time_created() to retrieve the value as a formatted 
+      string.
+      
+    * Node0x??.pm: Instrumented nodes to report opcode flags.
+
+
+2010-05-17  Version 1.0.6
+
+    * BXmlNode.pm: Added function get_hexdump().
+
+    * Chunk.pm: New function "collect_templates()" to rebuild NameStrings
+      and templates based on information in chunk header.
+    
+    * Const.pm: Added new constants.
+
+    * Evtx.pm: Fixed error in CRC32 checks. Bug reported by Michael Felber.
+    
+    * Template.pm: Added template GUID.
+    
+    * evtxtemplates.pl: Completely rewrote the sample program. It is now based
+      on template GUIDs and the chunk's template table. Type codes are now 
+      shown in hex. Option --hex displays hexdumps of templates.
+      
+    * Type0x11.pm: Increased precision of time stamps by one decimal.
+
+
+2010-04-27  Version 1.0.5
+
+    * Evtx.pm, Chunk.pm: Switched from Digest::Crc32 to Digest::CRC for
+      check sum calculation in order to ease installation and to significantly 
+      speed up calculations. Thanks to Kristinn Gudjonsson for the suggestion.
+      
+    * Type0x12.pm: Added support for SYSTIME. Thanks to Mark Woan for     
+      providing a sample.
+    
+    * Type0x94.pm, Type0x95.pm: Added support for HexInt32 and HexInt64 in
+      array context, when in a subsitution array. Thanks to Christopher Ahearn 
+      for providing a sample.
+
+
+2010-03-24  Version 1.0.4
+
+    * Chunk.pm: check() now evaluates CRC32 of a chunk's event data portion.
+    
+    * Const.pm: Fixed a couple of bugs with exporting, added new constants to 
+      be used in check() routines.
+      
+    * Const.pm: Added flags to be used in file header status flags.
+    
+    * evtxinfo.pl: corrected display of header status flags.
+    
+    * Chunk.pm: Does no longer attempt to create event record from slack 
+      space. Thanks to Kristinn Gudjonsson for reporting the error and to
+      Michael Felber for providing me with a sample file.
+
+
+2010-02-11  Version 1.0.3
+
+    * Event.pm, Chunk.pm: Added method check() to perform self-tests
+      on file and chunk objects. Only CRC32 checks of the file/chunk
+      header are implemented right now.
+      
+    * Const.pm: Moved a couple of common constants into new file.
+      
+    * evtxinfo.pl: Added code to demonstrate usage of the new
+      check() methods.
+
+    * Type0x0e.pm: Hex digits are now in upper case.
+
+    * Type0x0f.pm: Corrected byte ordering in GUID. Hex digits are now
+      in upper case.
+      
+    * Type0x12.pm: Disabled the module due to insufficient test data.
+      
+    * evtxsort.xsl: XSL transformation to normalize XML event logs 
+      produced by evtxtools, Windows Event Viewer and others.
+
+
+2010-02-03  Version 1.0.2
+
+    * Type0x00.pm: NullTypes may contain data, at least when they are in 
+      the context of a SubstitutionArray. parse_self() does no longer
+      assume an object's length of 0 bytes. Thanks to Roberto De Vivo for
+      providing a sample log file.
+      
+    * VariantType.pm: get_xml() now properly quotes XML special characters.
+      Thanks to Kristinn Gudjonsson for reporting the bug and providing the
+      fix.
+      
+    * VariantType.pm: get_xml() now removed excess null bytes from strings.
+    
+    * Closing elements (Node0x03 and Node0x04) propagate their type back into
+      the start element (Node0x01). The start element now produces the whole
+      element string.
+      
+    * Chunk.pm: The name stack has been replaced by an object stack. 
+    
+    * Node0x01.pm: Start elements keep the current stack depth (nesting level) 
+      in their properties.
+
+
+2009-12-21	Version 1.0.1
+
+    * Removed an erroneous check for MaxVariantType in Node0x0d.pm.
+      Thanks to Rob Hulley and Adrian Forschner for their bug reports 
+      and test data.
+
+    * Evtx.pm and Chunk.pm now parse more header fields. Thanks to 
+      Rob Hulley for contributing code.
+      
+    * Evtx.pm now maintains a pointer to the current chunk object on its own.
+      Call get_current_chunk() to retrieve the value at any time.
+    
+    * Added a new sample program: evtxinfo.pl displays various information 
+      from file and chunk headers.
